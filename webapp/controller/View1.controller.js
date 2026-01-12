@@ -261,6 +261,8 @@ sap.ui.define([
             }); this._oCreateDialog.close();
              },
 
+             //the code
+
         onCreateCancel: function () {
             var oModel = this.getView().getModel();
 
