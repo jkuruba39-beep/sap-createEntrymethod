@@ -12,9 +12,10 @@
                             search="onSearch"
                             />   
                         <Button id="b1" icon= "sap-icon://detail-view" press="onOpenVieweDialog" />
-                        <Button id="b2" icon= "sap-icon://add" press="onCreateProduct" />
-                        <Button id="b3" icon= "sap-icon://edit" press="onOpenUpdateDialog" />
-                        <Button id="b4" icon= "sap-icon://delete" press="onDeleteProduct" />
+                        <Button id="b2"  text="CREATE" icon= "sap-icon://add" press="onCreateProduct" />
+                         <Button id="b3" text="CREATEENTRY" icon= "sap-icon://add" press="onCreateEntryProduct" />
+                        <Button id="b4" icon= "sap-icon://edit" press="onOpenUpdateDialog" />
+                        <Button id="b6" icon= "sap-icon://delete" press="onDeleteProduct" />
                     </OverflowToolbar>
       <Table 
      items="{/Products}"

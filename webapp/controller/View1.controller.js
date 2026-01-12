@@ -3,9 +3,10 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
+    "sap/ui/model/FilterOperator",
+    "sap/ui/core/Fragment"
 
-], (Controller,MessageBox,MessageToast,Filter,FilterOperator) => {
+], (Controller,MessageBox,MessageToast,Filter,FilterOperator,Fragment) => {
     "use strict";
 
     return Controller.extend("projec.controller.View1", {
@@ -36,7 +37,6 @@ sap.ui.define([
 
         onCreateConfirm: function () {
             var oModel = this.getView().getModel();
-
             var oNewProduct = {
                 ID: this.byId("prodIdInput").getValue(),
                 Name: this.byId("nameInput").getValue(),
@@ -46,10 +46,7 @@ sap.ui.define([
                 Price: this.byId("priceInput").getValue(),
                 Rating: parseInt(this.byId("ratingInput").getValue(), 10)
             };
-             oModel.createEntry("/Products",{properties:oNewProduct});
-             this._oCreateDialog.close();
-
-            oModel.submitChanges({
+         oModel.create("/Products", oNewProduct, {
                 success: function () {
                     MessageToast.show("Product created successfully");
                     this._oCreateDialog.close();
@@ -59,30 +56,10 @@ sap.ui.define([
                     MessageBox.error("Create failed");
                     console.error(oError);
                 }
-            }); this._oCreateDialog.close();
-
-
-            // oModel.create("/Products", oNewProduct, {
-            //     success: function () {
-            //         MessageToast.show("Product created successfully");
-            //         this._oCreateDialog.close();
-            //         oModel.refresh(true);
-            //     }.bind(this),
-            //     error: function (oError) {
-            //         MessageBox.error("Create failed");
-            //         console.error(oError);
-            //     }
-            // });
+            });
         },
 
         onCreateCancel: function () {
-            var oModel = this.getView().getModel();
-
-            if (this._oCreateContext) {
-                oModel.deleteCreatedEntry(this._oCreateContext);
-                this._oCreateContext = null;
-            }
-
             this._oCreateDialog.close();
         },
 
@@ -192,7 +169,109 @@ sap.ui.define([
             if (oBinding) {
                 oBinding.filter(aFilters);
             }
+        },
+        //  onCreateEntryProduct: function () {
+        //     var oView = this.getView();
+        //     var oModel = oView.getModel();
+
+        //     this._oCreateContext = oModel.createEntry("/Products");
+
+        //     if (!this.oDialog) {
+        //         Fragment.load({
+        //             id: oView.getId(),
+        //             name: "projec.fragments.CreateProductfrg",
+        //             controller: this
+        //         }).then(function (oDialog) {
+        //             this.oDialog = oDialog;
+        //             oView.addDependent(oDialog);
+
+        //             oDialog.setModel(oModel);
+        //             oDialog.setBindingContext(this._oCreateContext);
+        //             oDialog.open();
+        //         }.bind(this));
+        //     } else {
+        //         this.oDialog.setBindingContext(this._oCreateContext);
+        //         this.oDialog.open();
+        //     }
+        // },
+
+        // onCreateConfirm1: function () {
+        //     var oModel = this.getView().getModel();
+
+        //     oModel.submitChanges({
+        //         success: function () {
+        //             MessageToast.show("Product created successfully");
+        //             oModel.refresh(true);
+        //         },
+        //         error: function () {
+        //             MessageBox.error("Failed to create product");
+        //         }
+        //     });
+
+        //     this.oDialog.close();
+        // },
+
+        // onCancelProduct1: function () {
+        //     var oModel = this.getView().getModel();
+
+        //     oModel.deleteCreatedEntry(this._oCreateContext);
+        //     this.oDialog.close();
+        // },
+        //crete entry with payload//
+         onCreateEntryProduct: function () {
+            var oView = this.getView();
+
+            if (!this._oCreateDialog) {
+                this._oCreateDialog = sap.ui.xmlfragment(
+                    oView.getId(),
+                    "projec.fragments.CreateProduct",
+                    this
+                );
+                oView.addDependent(this._oCreateDialog);
+            }
+
+            this._oCreateDialog.open();
+        },
+
+        onCreateConfirm: function () {
+            var oModel = this.getView().getModel();
+
+            var oNewProduct = {
+                ID: this.byId("prodIdInput").getValue(),
+                Name: this.byId("nameInput").getValue(),
+                Description: this.byId("descInput").getValue(),
+                ReleaseDate: this.byId("releaseDateInput").getDateValue(),
+                DiscontinuedDate: this.byId("discontinuedDateInput").getDateValue(),
+                Price: this.byId("priceInput").getValue(),
+                Rating: parseInt(this.byId("ratingInput").getValue(), 10)
+            };
+             oModel.createEntry("/Products",{properties:oNewProduct});
+             this._oCreateDialog.close();
+
+            oModel.submitChanges({
+                success: function () {
+                    MessageToast.show("Product created successfully");
+                    this._oCreateDialog.close();
+                    oModel.refresh(true);
+                }.bind(this),
+                error: function (oError) {
+                    MessageBox.error("Create failed");
+                    console.error(oError);
+                }
+            }); this._oCreateDialog.close();
+             },
+
+        onCreateCancel: function () {
+            var oModel = this.getView().getModel();
+
+            if (this._oCreateContext) {
+                oModel.deleteCreatedEntry(this._oCreateContext);
+                this._oCreateContext = null;
+            }
+
+            this._oCreateDialog.close();
         }
+
 
     });
 });
