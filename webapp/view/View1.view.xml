@@ -18,8 +18,9 @@
                         <Button id="b6" icon= "sap-icon://delete" press="onDeleteProduct" />
                     </OverflowToolbar>
       <Table 
+       
      items="{/Products}"
-       id="idList"
+       id="productTable"
       mode="SingleSelectMaster"
       selectionChange="onSelectionChange"
       

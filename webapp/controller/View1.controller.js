@@ -148,27 +148,40 @@ sap.ui.define([
         },
 
         onSearch: function (oEvent) {
-            var sQuery = oEvent.getSource().getValue();
-            var aFilters = [];
+    var sQuery = oEvent.getParameter("query");
+    var aFilters = [];
 
-            if (sQuery) {
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("ID", FilterOperator.Contains, sQuery),
-                            new Filter("ProductName", FilterOperator.Contains, sQuery)
-                        ],
-                        and: false
-                    })
-                );
-            }
+    if (sQuery) {
 
-            var oTable = this.byId("idList");
-            var oBinding = oTable.getBinding("items");
+        // Check if input is numeric (ID)
+        if (!isNaN(sQuery)) {
+            // Exact match for ID
+            aFilters.push(
+                new sap.ui.model.Filter(
+                    "ID",
+                    sap.ui.model.FilterOperator.EQ,
+                    Number(sQuery)
+                )
+            );
+        } else {
+            // Text search for Name
+            aFilters.push(
+                new sap.ui.model.Filter(
+                    "Name",
+                    sap.ui.model.FilterOperator.Contains,
+                    sQuery
+                )
+            );
+        }
+    }
 
-            if (oBinding) {
-                oBinding.filter(aFilters);
-            }
+    var oTable = this.byId("productTable");
+    var oBinding = oTable.getBinding("items");
+
+    if (oBinding) {
+        oBinding.filter(aFilters);
+    }
+
         },
         //  onCreateEntryProduct: function () {
         //     var oView = this.getView();
