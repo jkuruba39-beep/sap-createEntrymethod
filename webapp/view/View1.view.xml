@@ -2,6 +2,7 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
     <Page id="page" title="Employee details">
+    <Panel>
          <OverflowToolbar id="fbar1">
                         <ToolbarSpacer id="toba" />
                          <SearchField
@@ -50,5 +51,6 @@
             </ColumnListItem>
          </items>
       </Table>
+      </Panel>
     </Page>
 </mvc:View>
